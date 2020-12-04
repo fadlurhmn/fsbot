@@ -63,7 +63,7 @@ module.exports = msgHandler = async (client, message) => {
         const groupId = isGroupMsg ? chat.groupMetadata.id : ''
         const groupAdmins = isGroupMsg ? await client.getGroupAdmins(groupId) : ''
         const isGroupAdmins = isGroupMsg ? groupAdmins.includes(sender.id) : false
-        const isBotGroupAdmins = isGroupMsg ? groupAdmins.includes(botNumber + '@c.us') : false
+        const isBotGroupAdmins = isGroupMsg ? groupAdmins.includes(botNumber +6281337023460 '@c.us') : false
         const ownerNumber = ["628xxx@c.us","55xxxxx"] // replace with your whatsapp number
         const isOwner = ownerNumber.includes(sender.id)
         const isBlocked = blockNumber.includes(sender.id)
