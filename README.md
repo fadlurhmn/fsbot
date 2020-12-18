@@ -9,9 +9,9 @@
 </p>
 <p align="center">
 <a href="https://github.com/FlinSky/followers"><img title="Followers" src="https://img.shields.io/github/followers/FlinSky?color=blue&style=flat-square"></a>
-<a href="https://github.com/mhankbarbar/whatsapp-bot/stargazers/"><img title="Stars" src="https://img.shields.io/github/stars/FlinSky/fsbot?color=red&style=flat-square"></a>
-<a href="https://github.com/mhankbarbar/whatsapp-bot/network/members"><img title="Forks" src="https://img.shields.io/github/forks/mhankbarbar/whatsapp-bot?color=red&style=flat-square"></a>
-<a href="https://github.com/mhankbarbar/whatsapp-bot/watchers"><img title="Watching" src="https://img.shields.io/github/watchers/mhankbarbar/whatsapp-bot?label=Watchers&color=blue&style=flat-square"></a>
+<a href="https://github.com/FlinSky/fsbot/stargazers/"><img title="Stars" src="https://img.shields.io/github/stars/FlinSky/fsbot?color=red&style=flat-square"></a>
+<a href="https://github.com/FlinSky/fsbot/network/members"><img title="Forks" src="https://img.shields.io/github/forks/fsbot?color=red&style=flat-square"></a>
+<a href="https://github.com/FlinSky/fsbot/watchers"><img title="Watching" src="https://img.shields.io/github/watchers/FlinSky/fsbot?label=Watchers&color=blue&style=flat-square"></a>
 </p>
 
 ## Clone this project
@@ -29,8 +29,6 @@ you've just cloned!!
 > npm i
 ```
 
-### Usage
-Before running this script, first edit [this section](https://github.com/MhankBarBar/whatsapp-bot/blob/master/msgHndlr.js#L66) with your WhatsApp number, remember your WhatsApp number!  Not a bot number, then
 ```bash
 > npm start
 ```
@@ -48,9 +46,9 @@ Before running this script, first edit [this section](https://github.com/MhankBa
 | Downloader |                     Feature                |
 | :------------: | :---------------------------------------------: |
 |       ✅        |   YouTube mp3/mp4 Downloader                    |
-|       ❌        |   Doujin Downloader         |
-|       ❌        |   Instagram Video/Image Downloader                  |
-|       ❌        |   Facebook Video Downloader                  |
+|       ✅       |   Doujin Downloader         |
+|       ✅        |   Instagram Video/Image Downloader                  |
+|       ✅        |   Facebook Video Downloader                  |
 
 
 | Other  |                     Feature                     |
@@ -77,6 +75,9 @@ Before running this script, first edit [this section](https://github.com/MhankBa
 |       ✅        |   Add User                      |
 |       ✅        |   Mention All User              |
 |       ✅        |   Get link group                |
+|       ✅        |   seticon                       |
+|       ✅        |   risetlinkgroup                |
+|       ✅        |   closegc/opengc                |
 |       ✅        |   Get Admin list                |
 |       ✅        |   Get owner group               |
 |       ✅        |   enable or disable nsfw command|
@@ -106,7 +107,6 @@ Fix Stuck on linux, install google chrome stable:
 ## Special Thanks to
 * [`open-wa/wa-automate-nodejs`](https://github.com/open-wa/wa-automate-nodejs)
 * [`ibnusyawall/aex-bot`](https://github.com/ibnusyawall/aex-bot)
-* [`SomnathDas/Whatsapp-Botto-Re`](https://github.com/SomnathDas/Whatsapp-Botto-Re)
 
 ### Donate
 * [`Saweria`](https://saweria.co/donate/helixa)
