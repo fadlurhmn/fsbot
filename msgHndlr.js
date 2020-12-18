@@ -42,9 +42,59 @@ module.exports = msgHandler = async (client, message) => {
                 }
             }
         }
+            
+	    const apakah = [
+            'Ya',
+            'Tidak',
+			'bisa jadi',
+			'gak tau',
+			'100% ya',
+			'hmmm entah',
+            'Coba Ulangi'
+            ]
 
+        const bisakah = [
+            'Bisa',
+            'Tidak Bisa',
+			'hmm mungkin saja',
+			'tidak tau pikir aja sendiri',
+            'Coba Ulangi'
+            ]
+
+        const kapankah = [
+            '1 Minggu lagi',
+            '1 Bulan lagi',
+			'5 abad lagi',
+			'sabar 5 hari lagi',
+			'tanya aja sama mak lo',
+            '1 Tahun lagi'
+            ]
+			
+			const rate = [
+            '100%',
+            '95%',
+            '90%',
+            '85%',
+            '80%',
+            '75%',
+            '70%',
+            '65%',
+            '60%',
+            '55%',
+            '50%',
+            '45%',
+            '40%',
+            '35%',
+            '30%',
+            '25%',
+            '20%',
+            '15%',
+            '10%',
+            '5%'
+            ]
+			
         const mess = {
-            wait: '[ WAIT ] Sedang di proses⏳ silahkan tunggu sebentar',
+            wait: '[WAIT] Sedang di proses⏳ silahkan tunggu',
             error: {
                 St: '[❗] Kirim gambar dengan caption *!sticker* atau tag gambar yang sudah dikirim',
                 Qm: '[❗] Terjadi kesalahan, mungkin themenya tidak tersedia!',
@@ -56,7 +106,7 @@ module.exports = msgHandler = async (client, message) => {
                 Iv: '[❗] Link yang anda kirim tidak valid!'
             }
         }
-        const apiKey = '637WvV84bniAveHVxvK' // apikey you can get it at https://mhankbarbars.herokuapp.com/api
+        const apiKey = '637WvV84bniAveHVxvK' // apikey you can get it at https://mhankbarbar.herokuapp.com/api
         const time = moment(t * 1000).format('DD/MM HH:mm:ss')
         const botNumber = await client.getHostNumber()
         const blockNumber = await client.getBlockedIds()
@@ -105,7 +155,7 @@ module.exports = msgHandler = async (client, message) => {
             if (isMedia) {
                 if (mimetype === 'video/mp4' && message.duration < 10 || mimetype === 'image/gif' && message.duration < 10) {
                     const mediaData = await decryptMedia(message, uaOverride)
-                    client.reply(from, '[WAIT] Sedang di proses⏳ silahkan tunggu ± 1 min!', id)
+                    client.reply(from, 'Sabar proses', id)
                     const filename = `./media/aswu.${mimetype.split('/')[1]}`
                     await fs.writeFileSync(filename, mediaData)
                     await exec(`gify ${filename} ./media/output.gif --fps=30 --scale=240:240`, async function (error, stdout, stderr) {
@@ -113,7 +163,7 @@ module.exports = msgHandler = async (client, message) => {
                         await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
                     })
                 } else (
-                    client.reply(from, '[❗] Kirim video dengan caption *!stickerGif* max 10 sec!', id)
+                    client.reply(from, '[❗] Kirim video dengan caption *!stickerGif* max 5 sec!', id)
                 )
             }
             break
@@ -126,7 +176,7 @@ module.exports = msgHandler = async (client, message) => {
                     var base64img = imageBase64
                     var outFile = './media/img/noBg.png'
                     // untuk api key kalian bisa dapatkan pada website remove.bg
-                    var result = await removeBackgroundFromImageBase64({ base64img, apiKey: 'YJhR1jHdqVsJtF7nyezDfsZj', size: 'auto', type: 'auto', outFile })
+                    var result = await removeBackgroundFromImageBase64({ base64img, apiKey: '5AcfcuTxWqosPSMgfKz5YYZH', size: 'auto', type: 'auto', outFile })
                     await fs.writeFile(outFile, result.base64img)
                     await client.sendImageAsSticker(from, `data:${mimetype};base64,${result.base64img}`)
                 } catch(err) {
@@ -139,21 +189,48 @@ module.exports = msgHandler = async (client, message) => {
                 const mediaData = await decryptMedia(quotedMsg, uaOverride)
                 const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
                 await client.sendFile(from, imageBase64, 'imagesticker.jpg', 'sukses gan', id)
-            } else if (!quotedMsg) return client.reply(from, 'tidak ada sticker yang di balas!', id)}
-            break	
+            } else if (!quotedMsg) return client.reply(from, 'stiker yg lu bales mana jamed!', id)}
+            break				
         case '!donasi':
         case '!donate':
             client.sendLinkWithAutoPreview(from, 'https://saweria.co/donate/helixa', donate)
+            break	 
+		case '!play'://silahkan kalian custom sendiri jika ada yang ingin diubah
+		    if (!quotedMsg)
+            if (args.length == 0) return client.reply(from, `Untuk mencari lagu dari youtube\n\nPenggunaan: $!play judul lagu`, id)
+            axios.get(`https://arugaytdl.herokuapp.com/search?q=${body.slice(6)}`)
+            .then(async (res) => {
+                await client.sendFileFromUrl(from, `${res.data[0].thumbnail}`, ``, `Lagu ditemukan\n\nJudul: ${res.data[0].title}\nDurasi: ${res.data[0].duration}detik\nUploaded: ${res.data[0].uploadDate}\nView: ${res.data[0].viewCount}\n\nsedang dikirim`, id)
+				rugaapi.ytmp3(`https://youtu.be/${res.data[0].id}`)
+				.then(async(res) => {
+					if (res.status == 'error') return client.sendFileFromUrl(from, `${res.link}`, '', `${res.error}`)
+					await client.sendFileFromUrl(from, `${res.thumb}`, '', `Lagu ditemukan\n\nJudul ${res.title}\n\nSabar lagi dikirim`, id)
+					await client.sendFileFromUrl(from, `${res.link}`, '', '', id)
+					.catch(() => {
+						client.reply(from, `URL Ini ${args[0]} Sudah pernah di Download sebelumnya. URL akan di Reset setelah 1 Jam/60 Menit`, id)
+					})
+				})
+            })
+            .catch(() => {
+                client.reply(from, 'gagal mengunduh file!', id)
+            })
+            break	
+        case '!botstat': {
+            const loadedMsg = await client.getAmountOfLoadedMessages()
+            const chatIds = await client.getAllChatIds()
+            const groups = await client.getAllGroups()
+            client.sendText(from, `Status :\n- *${loadedMsg}* Loaded Messages\n- *${groups.length}* Group Chats\n- *${chatIds.length - groups.length}* Personal Chats\n- *${chatIds.length}* Total Chats`)
             break
+		}	
         case '!tts':
             if (args.length === 1) return client.reply(from, 'Kirim perintah *!tts [id, en, jp, ar] [teks]*, contoh *!tts id halo semua*')
             const ttsId = require('node-gtts')('id')
             const ttsEn = require('node-gtts')('en')
-	    const ttsJp = require('node-gtts')('ja')
+	        const ttsJp = require('node-gtts')('ja')
             const ttsAr = require('node-gtts')('ar')
             const dataText = body.slice(8)
-            if (dataText === '') return client.reply(from, 'Baka?', id)
-            if (dataText.length > 500) return client.reply(from, 'Teks terlalu panjang!', id)
+            if (dataText === '') return client.reply(from, '???', id)
+            if (dataText.length > 500) return client.reply(from, 'kepanjangan tod!', id)
             var dataBhs = body.slice(5, 7)
 	        if (dataBhs == 'id') {
                 ttsId.save('./media/tts/resId.mp3', dataText, function () {
@@ -175,11 +252,77 @@ module.exports = msgHandler = async (client, message) => {
                 client.reply(from, 'Masukkan data bahasa : [id] untuk indonesia, [en] untuk inggris, [jp] untuk jepang, dan [ar] untuk arab', id)
             }
             break
+		case '!pantun':
+            fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/pantun.txt')
+            .then(res => res.text())
+            .then(body => {
+                let splitpantun = body.split('\n')
+                let randompantun = splitpantun[Math.floor(Math.random() * splitpantun.length)]
+                client.reply(from, randompantun.replace(/aruga-line/g,"\n"), id)
+            })
+            .catch(() => {
+                client.reply(from, 'Ada yang Error!', id)
+            })
+            break
+		case '!katabijak':
+            fetch('https://raw.githubusercontent.com/ArugaZ/grabbed-results/main/random/katabijax.txt')
+            .then(res => res.text())
+            .then(body => {
+                let splitbijak = body.split('\n')
+                let randombijak = splitbijak[Math.floor(Math.random() * splitbijak.length)]
+                client.reply(from, randombijak, id)
+            })
+            .catch(() => {
+                client.reply(from, 'Ada yang Error!', id)
+            })
+            break	
+		case 'kapankah':
+            if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
+            const when = args.join(' ')
+            const ans = kapankah[Math.floor(Math.random() * (kapankah.length))]
+            if (!when) client.reply(from, '⚠️ Format salah! Ketik *!help* untuk penggunaan.')
+            await client.sendText(from, `Pertanyaan: *${when}* \n\nJawaban: ${ans}`)
+            break	
+        case 'rate':
+            if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
+            const rating = args.join(' ')
+            const awr = rate[Math.floor(Math.random() * (rate.length))]
+            if (!rating) client.reply(from, '⚠️ Format salah! Ketik *!help* untuk penggunaan.')
+            await client.sendText(from, `Pertanyaan: *${rating}* \n\nJawaban: ${awr}`)
+            break
+        case 'apakah':
+            if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
+            const nanya = args.join(' ')
+            const jawab = apakah[Math.floor(Math.random() * (apakah.length))]
+            if (!nanya) client.reply(from, '⚠️ Format salah! Ketik *!help* untuk penggunaan.')
+            await client.sendText(from, `Pertanyaan: *${nanya}* \n\nJawaban: ${jawab}`)
+            break
+         case 'bisakah':
+            if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
+            const bsk = args.join(' ')
+            const jbsk = bisakah[Math.floor(Math.random() * (bisakah.length))]
+            if (!bsk) client.reply(from, '⚠️ Format salah! Ketik *!help* untuk penggunaan.')
+            await client.sendText(from, `Pertanyaan: *${bsk}* \n\nJawaban: ${jbsk}`)
+            break
+		case '!koin':
+            if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
+            const side = Math.floor(Math.random() * 2) + 1
+            if (side == 1) {
+              client.sendStickerfromUrl(from, 'https://i.ibb.co/YTWZrZV/2003-indonesia-500-rupiah-copy.png', { method: 'get' })
+            } else {
+              client.sendStickerfromUrl(from, 'https://i.ibb.co/bLsRM2P/2003-indonesia-500-rupiah-copy-1.png', { method: 'get' })
+            }
+            break
+        case '!dadu':
+            if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
+            const dice = Math.floor(Math.random() * 6) + 1
+            await client.sendStickerfromUrl(from, 'https://www.random.org/dice/dice' + dice + '.png', { method: 'get' })
+            break	
         case '!nulis':
             if (args.length === 1) return client.reply(from, 'Kirim perintah *!nulis [teks]*', id)
             const nulis = encodeURIComponent(body.slice(7))
             client.reply(from, mess.wait, id)
-            let urlnulis = `https://mhankbarbars.herokuapp.com/nulis?text=${nulis}&apiKey=${apiKey}`
+            let urlnulis = `https://mhankbarbar.herokuapp.com/nulis?text=${nulis}&apiKey=${apiKey}`
             await fetch(urlnulis, {method: "GET"})
             .then(res => res.json())
             .then(async (json) => {
@@ -192,7 +335,7 @@ module.exports = msgHandler = async (client, message) => {
             if (!isLinks) return client.reply(from, mess.error.Iv, id)
             try {
                 client.reply(from, mess.wait, id)
-                const resp = await get.get(`https://mhankbarbars.herokuapp.com/api/yta?url=${args[1]}&apiKey=${apiKey}`).json()
+                const resp = await get.get(`https://mhankbarbar.herokuapp.com/api/yta?url=${args[1]}&apiKey=${apiKey}`).json()
                 if (resp.error) {
                     client.reply(from, resp.error, id)
                 } else {
@@ -213,7 +356,7 @@ module.exports = msgHandler = async (client, message) => {
             if (!isLin) return client.reply(from, mess.error.Iv, id)
             try {
                 client.reply(from, mess.wait, id)
-                const ytv = await get.get(`https://mhankbarbars.herokuapp.com/api/ytv?url=${args[1]}&apiKey=${apiKey}`).json()
+                const ytv = await get.get(`https://mhankbarbar.herokuapp.com/api/ytv?url=${args[1]}&apiKey=${apiKey}`).json()
                 if (ytv.error) {
                     client.reply(from, ytv.error, id)
                 } else {
@@ -229,7 +372,7 @@ module.exports = msgHandler = async (client, message) => {
         case '!wiki':
             if (args.length === 1) return client.reply(from, 'Kirim perintah *!wiki [query]*\nContoh : *!wiki asu*', id)
             const query_ = body.slice(6)
-            const wiki = await get.get(`https://mhankbarbars.herokuapp.com/api/wiki?q=${query_}&lang=id&apiKey=${apiKey}`).json()
+            const wiki = await get.get(`https://mhankbarbar.herokuapp.com/api/wiki?q=${query_}&lang=id&apiKey=${apiKey}`).json()
             if (wiki.error) {
                 client.reply(from, wiki.error, id)
             } else {
@@ -239,7 +382,7 @@ module.exports = msgHandler = async (client, message) => {
         case '!cuaca':
             if (args.length === 1) return client.reply(from, 'Kirim perintah *!cuaca [tempat]*\nContoh : *!cuaca tangerang', id)
             const tempat = body.slice(7)
-            const weather = await get.get(`https://mhankbarbars.herokuapp.com/api/cuaca?q=${tempat}&apiKey=${apiKey}`).json()
+            const weather = await get.get(`https://mhankbarbar.herokuapp.com/api/cuaca?q=${tempat}&apiKey=${apiKey}`).json()
             if (weather.error) {
                 client.reply(from, weather.error, id)
             } else {
@@ -250,19 +393,107 @@ module.exports = msgHandler = async (client, message) => {
             if (args.length === 1) return client.reply(from, 'Kirim perintah *!fb [linkFb]* untuk contoh silahkan kirim perintah *!readme*', id)
             if (!args[1].includes('facebook.com')) return client.reply(from, mess.error.Iv, id)
             client.reply(from, mess.wait, id)
-            const epbe = await get.get(`https://mhankbarbars.herokuapp.com/api/epbe?url=${args[1]}&apiKey=${apiKey}`).json()
+            const epbe = await get.get(`https://mhankbarbar.herokuapp.com/api/epbe?url=${args[1]}&apiKey=${apiKey}`).json()
             if (epbe.error) return client.reply(from, epbe.error, id)
             client.sendFileFromUrl(from, epbe.result, 'epbe.mp4', epbe.title, id)
             break
-        case '!creator':
-            client.sendContact(from, '6281246460730@c.us')
+		case '!shorturl':
+            if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
+            if (args.length === 1) return client.reply(from, 'Kirim perintah *!shorturl [linkWeb]*\nContoh : *!shorturl https://neonime.vip*', id)
+            const sorturl = body.slice(10)
+            const surl = await axios.get('https://tobz-api.herokuapp.com/api/shorturl?url=' + sorturl)
+            const surll = surl.data
+            if (surll.error) return client.reply(from, ssww.error, id)
+            const surl2 = `Link : ${sorturl}\nShort URL : ${surll.result}`
+            client.sendText(from, surl2, id)
             break
+		case '!spamcall':
+            if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa di gunakan dalam group', id)
+            if (!isOwner) return client.reply(from, 'Perintah ini hanya untuk Owner flin sky', id)
+            arg = body.trim().split(' ')
+            console.log(...arg[1])
+            var slicedArgs = Array.prototype.slice.call(arg, 1);
+            console.log(slicedArgs)
+            const spam = await slicedArgs.join(' ')
+            console.log(spam)
+            const call2 = await axios.get('https://tobz-api.herokuapp.com/api/spamcall?no=' + spam)
+            const { logs } = call2.data
+                await client.sendText(from, `Logs : ${logs}` + '.')
+            break
+		case '!google':
+            if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
+            client.reply(from, mess.wait, id)
+            const googleQuery = body.slice(8)
+            if(googleQuery == undefined || googleQuery == ' ') return tobz.reply(from, `*Hasil Pencarian : ${googleQuery}* tidak ditemukan`, id)
+            google({ 'query': googleQuery }).then(results => {
+            let vars = `_*Hasil Pencarian : ${googleQuery}*_\n`
+            for (let i = 0; i < results.length; i++) {
+                vars +=  `\n═════════════════\n\n*Judul* : ${results[i].title}\n\n*Deskripsi* : ${results[i].snippet}\n\n*Link* : ${results[i].link}\n\n`
+            }
+                client.reply(from, vars, id);
+            }).catch(e => {
+                console.log(e)
+                client.sendText(ownerNumber, 'Google Error : ' + e);
+            })
+            break
+		case '!ramalpasangan':
+            if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
+            if (args.length === 1) return client.reply(from, 'Kirim perintah *!ramalpasangan [kamu|pasangan]*\nContoh : *!ramalpasangan Rey|Flin*', id)
+            arg = body.trim().split('|')
+            if (arg.length >= 2) {
+            client.reply(from, mess.wait, id)
+            const kamu = arg[0]
+            const pacar = arg[1]
+            const rpmn = rate[Math.floor(Math.random() * (rate.length))]
+            const rpmn2 = rate[Math.floor(Math.random() * (rate.length))]
+            const rpmn3 = rate[Math.floor(Math.random() * (rate.length))]
+            const rpmn4 = rate[Math.floor(Math.random() * (rate.length))]
+            const rpmn5 = rate[Math.floor(Math.random() * (rate.length))]
+            const rpmn6 = rate[Math.floor(Math.random() * (rate.length))]
+            const rjh2 = `*Hasil Pengamatan!*\nPasangan dengan nama ${kamu} dan ${pacar}\n\n➸ Cinta : ${rpmn}\n➸ Jodoh : ${rpmn2}\n➸ Kemiripan : ${rpmn3}\n➸ Kesukaan : ${rpmn4}\n➸ Kesamaan : ${rpmn5}\n➸ Kebucinan ${rpmn6}`
+            client.reply(from, rjh2, id)
+            } else {
+            await client.reply(from, 'Wrong Format!', id)
+            }
+            break	
+		case '!katasenja':
+		    const kastun = ["Hampa itu seperti langkah tak berjejak, senja tapi tak jingga, cinta tapi tak dianggap","Tangannya menjadi pengganti tanganku untuk menuntunmu' Pundaknya menjadi pengganti pundakku untukmu bersandar. Biarlah gemercik gerimis, carik senja, secangkir teh, dan bait lagu menjadi penggantimu.","Kenapa aku suka senja? Karena negeri ini kebanyakan pagi, kekurangan senja, kebanyakan gairah, kurang perenungan.","Senja tak pernah salah hanya kenangan yang membuatnya basah.","Di bawah alismu hujan berteduh. Di merah matamu senja berlabuh.","Aku ingin kamu saja yang menemaniku membuka pagi hingga melepas senja, menenangkan malam dan membagi cerita.","Senja terlalu buru-buru berlalu, padahal aku baru hendak mewarnai langit untukmu dengan warna-warna rinduku yang selalu biru.","Melukiskanmu saat senja. Memanggil namamu ke ujung dunia. Tiada yang lebih pilu. Tiada yang menjawabku. Selain hatiku dan ombak berderu.","Ada yang tak tenggelam ketika senja datang: Rasa.","Senja yang retak. Kapal-kapal berlayar membawa kenangan. Airmatamu menjelma puisi paling duri, paling angin.","Tuhan, bersama tenggelamnya matahari senja ini,redakanlah kekecewaan dan kemarahan di hati ini. Sabarkanlah aku. Aamiin.","Beberapa penyair sibuk bersembunyi di balik senja, hujan, gemintang, ufuk, gunung, pantai, jingga, lembayung, kopi, renjana, juga berbagai kata romantis lainnya, untuk kemudian lupa pada fakta bahwa dunia sedang tidak baik-baik saja. Hingga akhirnya kata-kata hanyalah hiasan semata.","Maka siluetkan tubuhmu berlatar senja, karena tak sanggup kulihat airmatamu, kekasih.","Semerbak rindu kuasai udara panas ini, senja pun ikut berdebar menanti berita mu tentang perang dan cinta.","Aku hanyalah kunang-kunang dan engkau hanyalah senja. Saat gelap kita berbagi. Saat gelap kita abadi.","Disetiap senja, aku ingin melukis langit dengan warna mata kita: warna merah kerinduan.","Jika pena berganti rupa menjadi daun senja, biarlah dia mengering, lalu tersapu angin, sendiri dan dibiarkan oleh sepi.","Kupetik pipinya yang ranum,kuminum dukanya yang belum: Kekasihku, senja dan sendu telah diawetkan dalam kristal matamu.","Terkadang senja mengingatkan pada rumah, pada orang-orang yang membuat hati kita rindu untuk pulang.","Jika kamu merindukan seseorang, tataplah matahari sore. Kirimkan pesan rindumu untuknya lewat senja.","Uang, berilah aku rumah yang murah saja,yang cukup nyaman buat berteduh senja-senjaku, yang jendelanya hijau menganga seperti jendela mataku.","Kita hanyalah setitik senja yang kadang indah lalu surut dengan bermuram durja, dunia bagi masa kecil kita hanyalah mainan fana yang terus membumbung, mengitari angkasa dan membuat kita terlena akan keindahannya…","Dulu, pada suatu ketika, senja pernah indah, seindah janji-janji yang berujung menjadi sumpah serapah.","Aku melintasi kehidupan dan kala. Aku berlayar menembus senja. Kuberanikan diri menulis untuk mengabadikan momen hidup dalam lembaran kertas.","Di tengah angin senja yang mendesak, aku merasakan kekuasaan waktu, yang tanpa pandang bulu mengubah segala-galanya.","Gelisah, menampar tak basah pada senja yang bergeromis. Begitu keringkah ladang pertautan kita hingga tunas harapan enggan tumbuh lagi.","Setiap hari ada senja, tapi tidak setiap senja adalah senja keemasan, dan setiap senja keemasan itu tidaklah selalu sama.","Biarlah kunikmati kepedihan ini. Karena sesungguhnya perasaan perih disebabkan cinta yang terkulai sebelum berbunga, adalah sama sendunya dengan memeram cina itu sendiri selama bertahun-tahun. Bagai senja yang tak kunjung malam.","Begini rasanya harihari di linimasa. Wajahmu; 140 huruf yang terus menguntitku tanpa jarak hingga senja lesap dalam kita.","Percintaan itu fajar perkawinan. Perkawinan itu senja percintaan.","Usia senja bukanlah hal yang membuat sedih. Itu bisa jadi hal yang disyukuri jika kita menyelesaikan semua perkejaan kita.","Hidup seperti ini. Aku bisa merasakan senja yang bercampur bau tanah basah sepeninggal hujan."]
+			let katsen = kastun[Math.floor(Math.random() * kastun.length)]
+			client.reply(from, katsen, 'senja')
+			break
+        case '!aesthetic':
+           const aestetic = ["http://wa-botstiker.my.id/images/aesthetic/aachal-6geVJeZJMg8-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/abyan-athif-BCx6t5pJwVw-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/alexander-popov-UUJzCuHUfYI-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/alexander-popov-kx1r9Fgqe7s-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/alexander-popov-lXaOSpd_UQw-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/anders-jilden-AkUR27wtaxs-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/andrea-boschini-5Ipk8IgNpPg-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/anmol-gupta-6Zpojuvyr-E-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/austin-chan-ukzHlkoz1IE-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/bantersnaps-1sUs8JbGx74-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/beasty--HxIhfS_dUk-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/daniel-tseng-W9kq9suABY4-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/estee-janssens-MUf7Ly04sOI-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/fabian-moller-gI7zgb80QWY-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/florian-klauer-mk7D-4UCfmg-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/ian-dooley-aaAllJ6bmac-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/karthikeya-gs-ZMM2sVJKd3A-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/kevin-laminto-hSeh-3ID830-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/larm-rmah-CB8tGaFoW38-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/matthew-ronder-seid-GWzCpqXPNDw-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/orfeas-green-G5A5ZNjS2tE-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/pari-karra-elK1z1WcsR8-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/sean-foley-qEWEz-U5p8Q-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/sean-foley-z4gWzj0p93c-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/tamara-gore-ldZrvy2SOEA-unsplash.jpg","http://wa-botstiker.my.id/images/aesthetic/vanessa-serpas-S4fYv5LQ4_A-unsplash.jpg"]
+           let aes = aestetic[Math.floor(Math.random() * aestetic.length)]
+           client.sendFileFromUrl(from, aes, 'aestetic.jpg', 'aesthetic')
+           break
+        case '!ptl2':
+            const itemssh = ["https://i.pinimg.com/originals/74/b0/26/74b0268d2f4546996fa25afdafa980dc.jpg","https://i.pinimg.com/originals/f2/e9/1d/f2e91d2e9b671d6ebf59bacab216762f.jpg","https://i.pinimg.com/originals/80/72/79/807279a91face343ca53bffcec989cf4.jpg","https://i.pinimg.com/originals/a1/11/1a/a1111abf90379e4fa883fa3b8b5d643a.jpg","https://i.pinimg.com/originals/09/bd/57/09bd57e50174134865c250684e9ddda1.jpg","https://i.pinimg.com/originals/73/a2/3d/73a23de8b98399afd93eb723540bae80.jpg","https://i.pinimg.com/originals/72/ee/27/72ee2735bbdb1b1a4992efbf4094477e.png","https://i.pinimg.com/originals/cb/a2/89/cba28917d4f8d5b8de63ec89b66d1afe.jpg","https://i.pinimg.com/originals/98/02/64/9802648c9c057644f754434871fc4e2e.jpg","https://i.pinimg.com/originals/46/c2/7b/46c27b4b1d2ae4459f750afd0d8021b1.jpg","https://i.pinimg.com/originals/68/56/1e/68561ed7e1a97842030fb0f39edf9c80.jpg","https://i.pinimg.com/originals/73/3e/ed/733eed5f6d1b8a9f22e692b993e70491.jpg","https://i.pinimg.com/originals/f5/71/6a/f5716a30204f93707bd2c8fc91bc9462.jpg","https://i.pinimg.com/originals/16/52/1d/16521d9b7ea44aa0a28e360bb5f705d6.jpg","https://i.pinimg.com/originals/27/fe/e8/27fee89007af1025d601c87763f1dc1d.jpg","https://i.pinimg.com/originals/d8/12/4a/d8124a11bd20912b0402ff61130f8489.jpg","https://i.pinimg.com/originals/eb/44/81/eb4481101e8b8763428e8fbbad3a7bdb.jpg","https://i.pinimg.com/originals/a6/34/cf/a634cfa655269069439e9476780b46fe.jpg","https://i.pinimg.com/originals/b5/01/72/b50172848dd7e3465beb16adb0599684.jpg","https://i.pinimg.com/originals/54/42/36/54423601bc0c926de050fc2d0836be79.jpg","https://i.pinimg.com/originals/e2/3c/0c/e23c0c12244ad392c982d6267d262dd2.jpg","https://i.pinimg.com/originals/fa/10/ca/fa10ca99305c151b3ae8cad8a20794f2.jpg","https://i.pinimg.com/originals/b4/02/be/b402bed7c76e052f368dac1ec740210a.jpg","https://i.pinimg.com/originals/32/43/8f/32438f37c5b6a1b2dabbf934162b11e4.jpg","https://i.pinimg.com/originals/55/49/cc/5549ccb0b32a10216b09f67632070507.jpg","https://i.pinimg.com/originals/a3/aa/aa/a3aaaae3a00f4211af2e8e4ecb1da007.jpg","https://i.pinimg.com/originals/fa/5f/6d/fa5f6d5e40adc51c2095333d7501e76f.jpg","https://i.pinimg.com/originals/44/e4/f7/44e4f767400646e3bc5bc6e0ebf7368d.jpg","https://i.pinimg.com/originals/34/20/8e/34208e0a125963d781b9171cb54bc171.jpg","https://i.pinimg.com/originals/8d/a4/0b/8da40b8c05ed685a39c93b27e4d69046.jpg","https://i.pinimg.com/originals/81/eb/13/81eb13ba9c391c3bbb56f0667b717740.jpg","https://i.pinimg.com/originals/56/3f/89/563f896b53f0787abf9ccef902d5209c.jpg","https://i.pinimg.com/originals/4e/b0/01/4eb0010c0fbab4324989af5186e3aa4a.jpg","https://i.pinimg.com/originals/68/94/13/68941383215d751d5c6eb72af4549019.jpg","https://i.pinimg.com/originals/12/b4/ee/12b4eef886901649cca0799faa9f651f.jpg","https://i.pinimg.com/originals/01/4b/9e/014b9edaf6f3cf315793b0a63c24fa35.jpg","https://i.pinimg.com/originals/78/fa/10/78fa10ab94c0dc9e19a18358a9752070.jpg","https://i.pinimg.com/originals/53/4e/85/534e85a5af73e256d5dd824bef563de0.jpg","https://i.pinimg.com/originals/9f/37/7a/9f377a105a0f7cc4bea1f553bea36d06.jpg","https://i.pinimg.com/originals/a6/6c/6c/a66c6cde03ea6ad72ca36776c5bb2ed9.jpg","https://i.pinimg.com/originals/5e/16/97/5e16970e6a84f3a4959c8d7e7117d287.jpg","https://i.pinimg.com/originals/88/c0/72/88c072ea8f6b047c8971efa099f2ab25.jpg","https://i.pinimg.com/originals/03/5f/ed/035fed621d33d42f453f314049a09244.jpg","https://i.pinimg.com/originals/0d/53/15/0d53156e1fa4d591d32e2ecd8c10f953.jpg","https://i.pinimg.com/originals/d0/5e/b8/d05eb893d80d9a02aa03d4b1314adff5.jpg","https://i.pinimg.com/originals/7c/e5/d8/7ce5d88853231888e9798f65a24ad11a.jpg","https://i.pinimg.com/originals/7c/67/0f/7c670fde8e6428661073e0a01996406b.jpg","https://i.pinimg.com/originals/6a/74/e5/6a74e5c6c6aeca129e9f5fd6976c77cb.jpg","https://i.pinimg.com/originals/3b/89/9c/3b899c8c52604a10812ee06b8ef4ad84.jpg","https://i.pinimg.com/originals/6a/15/1e/6a151e72a8f017c8988eb570841c8b35.jpg"]
+            let cewesh = itemssh[Math.floor(Math.random() *itemssh.length)]
+            client.sendFileFromUrl(from, cewesh, 'ptlsh.jpeg', 'Piw', id)
+            break
+        case '!ptl3':
+            const itemslh = ["https://i.pinimg.com/originals/69/d7/b3/69d7b3d5a089e7cbee0250ea5da9b14b.jpg","https://i.pinimg.com/originals/78/fa/10/78fa10ab94c0dc9e19a18358a9752070.jpg","https://i.pinimg.com/originals/93/e0/a3/93e0a3816183696ff89b1ad7db2fd3c0.jpg","https://i.pinimg.com/originals/a6/34/cf/a634cfa655269069439e9476780b46fe.jpg","https://i.pinimg.com/originals/dc/f5/69/dcf569a7b08efcae64d0747b51d04a7d.jpg","https://i.pinimg.com/originals/4f/96/2b/4f962b89bd7ceb438b3e9ebbd075184c.jpg","https://i.pinimg.com/originals/c2/fb/e7/c2fbe7a6955a85c51b9ee8062a7b68d3.jpg","https://i.pinimg.com/originals/44/54/24/44542415cf206f2c041e3bbb52a69419.jpg","https://i.pinimg.com/originals/ae/3c/40/ae3c40e0a2f653811b5a67ccd6b9d8cc.jpg","https://i.pinimg.com/originals/bd/fa/33/bdfa3317d96e6cdafaf27e3b337d05b4.jpg","https://i.pinimg.com/originals/75/6a/f2/756af236ae909431567ed184c43aae6f.png","https://i.pinimg.com/originals/a5/95/d7/a595d7fe6b8dc00d1aaa7287f1dd304e.jpg","https://i.pinimg.com/originals/40/37/78/40377871ee06a4a434c39e90b1f647e1.jpg","https://i.pinimg.com/originals/45/73/ac/4573ac9484c480500872b7c91f758040.jpg","https://i.pinimg.com/originals/32/7d/0b/327d0be89cc60321128d0f0bdaadfc15.jpg","https://i.pinimg.com/originals/f4/a1/0f/f4a10ffd44aea604383be84a34f69f90.jpg","https://i.pinimg.com/originals/ec/7f/b5/ec7fb5506136f72876633aab957a755a.jpg","https://i.pinimg.com/originals/4c/e9/15/4ce915c8245586f541c4d0a8b71cc500.jpg","https://i.pinimg.com/originals/03/2a/14/032a145e96154753e33bdda30d9f41f1.jpg","https://i.pinimg.com/originals/f4/5b/07/f45b070de82acec89092eaea1b415029.jpg","https://i.pinimg.com/originals/a9/f2/da/a9f2da1277fb7bc801856c3b9c12d37d.jpg","https://i.pinimg.com/originals/af/ab/93/afab93ebbf109a601dcb77b5baa494b4.jpg","https://i.pinimg.com/originals/b9/38/df/b938dfba6c139ad45ce51203a43eac0d.jpg","https://i.pinimg.com/originals/af/10/0a/af100a49cb8f53f0dd5b48664ede9db8.jpg","https://i.pinimg.com/originals/99/18/6c/99186c2145e1223f885103f51817be78.jpg","https://i.pinimg.com/originals/3c/fd/c9/3cfdc9ba7cf79ed061808e162162f4da.jpg","https://i.pinimg.com/originals/31/95/64/319564a33b5ed46a52d30c18d2310f22.jpg","https://i.pinimg.com/originals/1c/2d/9f/1c2d9ffdd104200355bab43c9d3fad20.gif","https://i.pinimg.com/originals/4a/aa/12/4aaa12940f51fdfb1684964df3796c4c.jpg","https://i.pinimg.com/originals/37/90/bc/3790bc29be16d95174af4eff4ee3859f.jpg","https://i.pinimg.com/originals/4c/12/8f/4c128fda6e71a9f4c670a78a21d8c196.jpg","https://i.pinimg.com/originals/34/92/10/3492100b4a924458a2bf5340d68293c2.jpg","https://i.pinimg.com/originals/5a/dd/12/5add12091eafba364ec76c91d20e75ac.jpg","https://i.pinimg.com/originals/da/c3/59/dac359d1fc87193c2b9d85bb96fedcbc.jpg","https://i.pinimg.com/originals/2e/d6/a9/2ed6a9670d942220eab92b99bb0d1c09.jpg","https://i.pinimg.com/originals/f1/89/e3/f189e3d9b353f91b60060cc64e6706c9.jpg","https://i.pinimg.com/originals/8c/06/c2/8c06c22283cf98abdb8922e2f3aa0a6a.jpg","https://i.pinimg.com/originals/8b/6f/0b/8b6f0b1e213240eaad90894292a2d3c1.jpg","https://i.pinimg.com/originals/89/bf/b8/89bfb86392d39477adcd66444cf19845.jpg","https://i.pinimg.com/originals/35/e2/cc/35e2cc3c535d8f1cfeaf13cce69ac984.jpg","https://i.pinimg.com/originals/c0/01/a1/c001a16e2629872a3d7ea7fdbe5a4e98.jpg","https://i.pinimg.com/originals/b4/eb/48/b4eb486def2d413716c5fa033af9fb34.jpg","https://i.pinimg.com/originals/55/ee/7b/55ee7b5f4889cc34ec1a01d2e7875b53.jpg","https://i.pinimg.com/originals/0c/b3/0e/0cb30ea660aafbae32cc07433bf3eea2.jpg","https://i.pinimg.com/originals/1f/50/23/1f5023991f2a01cff748e84c4cf3612d.jpg","https://i.pinimg.com/originals/ab/53/07/ab5307df9234934f385eb6235aa6c2cd.jpg","https://i.pinimg.com/originals/e1/a1/7c/e1a17c5f359846741c687ef1fcadb316.jpg","https://i.pinimg.com/originals/16/1b/21/161b215ee2f8e0a040c91f18c054d705.jpg","https://i.pinimg.com/originals/da/07/1a/da071a5fafbc6487d38edd4e9f3401db.jpg","https://i.pinimg.com/originals/54/f4/26/54f42615f9ad45743e6fb08ed86623f0.jpg"]
+            let cewelh = itemslh[Math.floor(Math.random() *itemslh.length)]
+            client.sendFileFromUrl(from, cewelh, 'ptlsh.jpeg', 'Wkwkwkw', id)
+            break	
+		case '!ptl':
+            if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa digunakan dalam group!', id)
+            const pptl = ["https://i.pinimg.com/564x/b2/84/55/b2845599d303a4f8fc4f7d2a576799fa.jpg", "https://i.pinimg.com/236x/98/08/1c/98081c4dffde1c89c444db4dc1912d2d.jpg", "https://i.pinimg.com/236x/a7/e2/fe/a7e2fee8b0abef9d9ecc8885557a4e91.jpg", "https://i.pinimg.com/236x/ee/ae/76/eeae769648dfaa18cac66f1d0be8c160.jpg", "https://i.pinimg.com/236x/b2/84/55/b2845599d303a4f8fc4f7d2a576799fa.jpg", "https://i.pinimg.com/564x/78/7c/49/787c4924083a9424a900e8f1f4fdf05f.jpg", "https://i.pinimg.com/236x/eb/05/dc/eb05dc1c306f69dd43b7cae7cbe03d27.jpg", "https://i.pinimg.com/236x/d0/1b/40/d01b40691c68b84489f938b939a13871.jpg", "https://i.pinimg.com/236x/31/f3/06/31f3065fa218856d7650e84b000d98ab.jpg", "https://i.pinimg.com/236x/4a/e5/06/4ae5061a5c594d3fdf193544697ba081.jpg", "https://i.pinimg.com/236x/56/45/dc/5645dc4a4a60ac5b2320ce63c8233d6a.jpg", "https://i.pinimg.com/236x/7f/ad/82/7fad82eec0fa64a41728c9868a608e73.jpg", "https://i.pinimg.com/236x/ce/f8/aa/cef8aa0c963170540a96406b6e54991c.jpg", "https://i.pinimg.com/236x/77/02/34/77023447b040aef001b971e0defc73e3.jpg", "https://i.pinimg.com/236x/4a/5c/38/4a5c38d39687f76004a097011ae44c7d.jpg", "https://i.pinimg.com/236x/41/72/af/4172af2053e54ec6de5e221e884ab91b.jpg", "https://i.pinimg.com/236x/26/63/ef/2663ef4d4ecfc935a6a2b51364f80c2b.jpg", "https://i.pinimg.com/236x/2b/cb/48/2bcb487b6d398e8030814c7a6c5a641d.jpg", "https://i.pinimg.com/236x/62/da/23/62da234d941080696428e6d4deec6d73.jpg", "https://i.pinimg.com/236x/d4/f3/40/d4f340e614cc4f69bf9a31036e3d03c5.jpg", "https://i.pinimg.com/236x/d4/97/dd/d497dd29ca202be46111f1d9e62ffa65.jpg", "https://i.pinimg.com/564x/52/35/66/523566d43058e26bf23150ac064cfdaa.jpg", "https://i.pinimg.com/236x/36/e5/27/36e52782f8d10e4f97ec4dbbc97b7e67.jpg", "https://i.pinimg.com/236x/02/a0/33/02a033625cb51e0c878e6df2d8d00643.jpg", "https://i.pinimg.com/236x/30/9b/04/309b04d4a498addc6e4dd9d9cdfa57a9.jpg", "https://i.pinimg.com/236x/9e/1d/ef/9e1def3b7ce4084b7c64693f15b8bea9.jpg", "https://i.pinimg.com/236x/e1/8f/a2/e18fa21af74c28e439f1eb4c60e5858a.jpg", "https://i.pinimg.com/236x/22/d9/22/22d9220de8619001fe1b27a2211d477e.jpg", "https://i.pinimg.com/236x/af/ac/4d/afac4d11679184f557d9294c2270552d.jpg", "https://i.pinimg.com/564x/52/be/c9/52bec924b5bdc0d761cfb1160865b5a1.jpg", "https://i.pinimg.com/236x/1a/5a/3c/1a5a3cffd0d936cd4969028668530a15.jpg"]
+            let pep = pptl[Math.floor(Math.random() * pptl.length)]
+            client.sendFileFromUrl(from, pep, 'pptl.jpg', 'Follow ig : https://www.instagram.com/ptl_repost untuk mendapatkan penyegar timeline lebih banyak', message.id)
+            break	
+        case '!creator':
+		case '!ownerbot':
+		case '!owner':
+            client.sendContact(from, '6281246460730@c.us')
+			client.reply(from, 'itu kontak nya orang ganteng gan :v', id)
+            break		
         case '!ig':
             if (args.length === 1) return client.reply(from, 'Kirim perintah *!ig [linkIg]* untuk contoh silahkan kirim perintah *!readme*')
             if (!args[1].match(isUrl) && !args[1].includes('instagram.com')) return client.reply(from, mess.error.Iv, id)
             try {
                 client.reply(from, mess.wait, id)
-                const resp = await get.get(`https://mhankbarbars.herokuapp.com/api/ig?url=${args[1]}&apiKey=${apiKey}`).json()
+                const resp = await get.get(`https://mhankbarbar.herokuapp.com/api/ig?url=${args[1]}&apiKey=${apiKey}`).json()
                 if (resp.result.includes('.mp4')) {
                     var ext = '.mp4'
                 } else {
@@ -273,6 +504,59 @@ module.exports = msgHandler = async (client, message) => {
                 client.reply(from, mess.error.Ig, id)
                 }
             break
+		case '!groupinfo':
+                    if (!isGroupMsg) return client.reply(from, '???!', message.id)
+                    var totalMem = chat.groupMetadata.participants.length
+                    var desc = chat.groupMetadata.desc
+                    var groupname = formattedTitle
+                    var welgrp = welkom.includes(chat.id)
+                    var ngrp = nsfw_.includes(chat.id)
+                    var grouppic = await client.getProfilePicFromServer(chat.id)
+                    if (grouppic == undefined) {
+                        var pfp = errorurl
+                    } else {
+                        var pfp = grouppic
+                    }
+                    await client.sendFileFromUrl(from, pfp, 'group.png', `➸ *Name : ${groupname}* 
+*➸ Members : ${totalMem}*
+*➸ Welcome : ${welgrp ? 'ON' : 'OFF'}*
+*➸ NSFW : ${ngrp ? 'ON' : 'OFF'}*
+*➸ Group Description* : ${desc}`)
+            break
+		case '!qrcode':
+                    if (!isGroupMsg) return client.reply(from, `untuk mengunakan ketik ,!qrcode`, id)
+                    if (!args.lenght >= 2) return
+                    let qrcodes = body.slice(8)
+                    await client.sendFileFromUrl(from, `https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${qrcodes}`, 'gambar.png', 'Process sukses!')
+            break	
+		case '!closegc':
+            if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa digunakan dalam group!', id)
+            if (!isGroupAdmins) return client.reply(from, 'Perintah ini hanya untuk Admin Grup!', id)
+            client.setGroupToAdminsOnly(groupId, true)
+		    client.sendText(from,'sukses close gc!', id)
+            break
+        case '!opengc':
+            if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa digunakan dalam group!', id)
+            if (!isGroupAdmins) return client.reply(from, 'Perintah ini hanya untuk Admin Grup!', id)
+            client.setGroupToAdminsOnly(groupId, false)
+		    client.sendText(from,'sukses open gc!', id)
+            break
+		case '!deskripsi':
+            if (isGroupMsg) {
+            if (isGroupAdmins) {
+            try {
+            const desk = body.slice(9)
+                await client.setGroupDescription(from, `${desk}`, id)
+            } catch {
+                client.reply(from, 'Terjadi kesalahan, tidak dapat mengubah deskripsi grup', message)
+                            }
+            } else {
+                clien.reply(from, 'Maaf, fitur ini hanya untuk owner grup', message)
+                        }
+            } else {
+                client.reply(from, 'Fitur ini hanya bisa di gunakan dalam grup', message)
+                    }
+            break	
         case '!nsfw':
             if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
             if (!isGroupAdmins) return client.reply(from, 'Perintah ini hanya bisa di gunakan oleh Admin group!', id)
@@ -289,6 +573,15 @@ module.exports = msgHandler = async (client, message) => {
                 client.reply(from, 'Pilih enable atau disable udin!', id)
             }
             break
+		case '!risetlinkgroup':
+            if (!isGroupMsg) return client.reply(from, `Fitur ini hanya bisa di gunakan dalam group`, id)
+            if (!isGroupAdmins) return client.reply(from, `Fitur ini hanya bisa di gunakan oleh admin group`, id)
+            if (!isBotGroupAdmins) return client.reply(from, `Fitur ini hanya bisa di gunakan ketika bot menjadi admin`, id)
+            if (isGroupMsg) {
+            await client.revokeGroupInviteLink(groupId);
+            client.sendTextWithMentions(from, `Link group telah direset oleh admin @${sender.id.replace('@c.us', '')}`)
+            }
+            break	
         case '!welcome':
             if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
             if (!isGroupAdmins) return client.reply(from, 'Perintah ini hanya bisa di gunakan oleh Admin group!', id)
@@ -304,28 +597,100 @@ module.exports = msgHandler = async (client, message) => {
             } else {
                 client.reply(from, 'Pilih enable atau disable udin!', id)
             }
-            break
+            break	
         case '!nsfwmenu':
             if (!isNsfw) return
             client.reply(from, '1. !randomHentai\n2. !randomNsfwNeko', id)
             break
+		case '!sider':
+            if (!isGroupMsg) return client.reply(from, 'Hanya untuk di dalam group')
+            if (!quotedMsg) return client.reply(from, 'Tolong reply pesan')
+            if (!quotedMsgObj) return client.reply(from, 'tolong reply pesan')
+            try {
+                const reader = await client.getMessageReaders(quotedMsgObj.id)
+                let lista = ''
+                for (let pembaca of reader) {
+                    lista += `- @${pembaca.id.replace(/@c.us/g,'')}\n`
+                }
+                client.sendTextWithMentions(from, `hmm read doang..\n${lista}`)
+            } catch (err) {
+                console.log(err)
+				client.reply(from, 'Maaf, Belum ada yang membaca pesan')
+            }
+            break	
+		case '!setgroupname':
+            if (!isGroupMsg) return client.reply(from, `??`, id)
+            if (!isGroupAdmins) return client.reply(from, `bukan admin jangan sok keras :v`, id)
+            if (!isBotGroupAdmins) return client.reply(from, `Fitur ini hanya bisa di gunakan ketika bot menjadi admin`, id)
+            const namagrup = body.slice(14)
+            let sebelum = chat.groupMetadata.formattedName
+            let halaman = global.page ? global.page : await client.getPage()
+            await halaman.evaluate((chatId, subject) =>
+            Store.WapQuery.changeSubject(chatId, subject),groupId, `${namagrup}`)
+            client.sendTextWithMentions(from, `Nama group telah diubah oleh admin @${sender.id.replace('@c.us','')}\n\n• Before: ${sebelum}\n• After: ${namagrup}`)
+            break
+		case '!setname':
+            if (!isOwner) return client.reply(from, `Perintah ini hanya bisa di gunakan oleh Owner Flin Sky!`, id)
+            const setnem = body.slice(9)
+            await client.setMyName(setnem)
+            client.sendTextWithMentions(from, `Makasih Tuan Nama Barunya @${sender.id.replace('@c.us','')} 😘`, id)
+            break
+		case '!cgc':
+            if (!isOwner) return client.reply(from, 'Perintah ini hanya bisa digunakan oleh Owner', id)
+            arg = body.trim().split(' ')
+            const gcname = arg[1]
+            client.createGroup(gcname, mentionedJidList)
+            client.sendText(from, 'Berhasil membuat group!')
+            break	
+		case '!setpp':
+            if(!isOwner) return client.reply(from, 'Perintah ini hanya untuk Owner!', id)
+            const isqwtimg1 = quotedMsg && quotedMsg.type === 'image'
+			if (isMedia && type == 'image' || isqwtimg1) {
+				const dataMedia = isqwtimg1 ? quotedMsg : message
+				const _mimetypee = dataMedia.mimetype
+				const mediaData = await decryptMedia(dataMedia, uaOverride)
+				const imageBase64 = `data:${_mimetypee};base64,${mediaData.toString('base64')}`
+                await client.setProfilePic(imageBase64)
+                await client.reply(from, 'Berhasil mengubah foto profile!', id)
+            }
+            break	
+		case '!seticon':
+			if (!isGroupMsg) return client.reply(from, '???!', id)
+            if (!isGroupAdmins) return client.reply(from, 'Gagal, perintah ini hanya dapat digunakan oleh admin grup!', id)
+            if (!isBotGroupAdmins) return client.reply(from, 'Gagal, silahkan tambahkan Flin Sky sebagai admin grup!', id)
+            const isqwtimg = quotedMsg && quotedMsg.type === 'image'
+			if (isMedia && type == 'image' || isqwtimg) {
+				const dataMedia = isqwtimg ? quotedMsg : message
+				const _mimetype = dataMedia.mimetype
+				const mediaData = await decryptMedia(dataMedia, uaOverride)
+				const imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
+				await client.setGroupIcon(groupId, imageBase64)
+			} else if (args.length === 1) {
+				if (!isUrl(url)) { await client.reply(from, 'Maaf, link yang kamu kirim tidak valid.', id) }
+				client.setGroupIconByUrl(groupId, url).then((r) => (!r && r !== undefined)
+				? client.reply(from, 'Maaf, link yang kamu kirim tidak memuat gambar.', id)
+				: client.reply(from, 'Berhasil mengubah profile group', id))
+			} else {
+				client.reply(from, `Commands ini digunakan untuk mengganti icon/profile group chat\n\n\nPenggunaan:\n1. Silahkan kirim/reply sebuah gambar dengan caption !seticon\n\n2. Silahkan ketik !seticon linkImage`)
+			}
+            break	
         case '!igstalk':
             if (args.length === 1)  return client.reply(from, 'Kirim perintah *!igStalk @username*\nConntoh *!igStalk @duar_amjay*', id)
-            const stalk = await get.get(`https://mhankbarbars.herokuapp.com/api/stalk?username=${args[1]}&apiKey=${apiKey}`).json()
+            const stalk = await get.get(`https://mhankbarbar.herokuapp.com/api/stalk?username=${args[1]}&apiKey=${apiKey}`).json()
             if (stalk.error) return client.reply(from, stalk.error, id)
             const { Biodata, Jumlah_Followers, Jumlah_Following, Jumlah_Post, Name, Username, Profile_pic } = stalk
             const caps = `➸ *Nama* : ${Name}\n➸ *Username* : ${Username}\n➸ *Jumlah Followers* : ${Jumlah_Followers}\n➸ *Jumlah Following* : ${Jumlah_Following}\n➸ *Jumlah Postingan* : ${Jumlah_Post}\n➸ *Biodata* : ${Biodata}`
             await client.sendFileFromUrl(from, Profile_pic, 'Profile.jpg', caps, id)
             break
         case '!infogempa':
-            const bmkg = await get.get(`https://mhankbarbars.herokuapp.com/api/infogempa?apiKey=${apiKey}`).json()
+            const bmkg = await get.get(`https://mhankbarbar.herokuapp.com/api/infogempa?apiKey=${apiKey}`).json()
             const { potensi, koordinat, lokasi, kedalaman, magnitude, waktu, map } = bmkg
             const hasil = `*${waktu}*\n📍 *Lokasi* : *${lokasi}*\n〽️ *Kedalaman* : *${kedalaman}*\n💢 *Magnitude* : *${magnitude}*\n🔘 *Potensi* : *${potensi}*\n📍 *Koordinat* : *${koordinat}*`
             client.sendFileFromUrl(from, map, 'shakemap.jpg', hasil, id)
             break
         case '!anime':
             if (args.length === 1) return client.reply(from, 'Kirim perintah *!anime [query]*\nContoh : *!anime darling in the franxx*', id)
-            const animek = await get.get(`https://mhankbarbars.herokuapp.com/api/kuso?q=${body.slice(7)}&apiKey=${apiKey}`).json()
+            const animek = await get.get(`https://mhankbarbar.herokuapp.com/api/kuso?q=${body.slice(7)}&apiKey=${apiKey}`).json()
             if (animek.error) return client.reply(from, animek.error, id)
             const res_animek = `Title: *${animek.title}*\n\n${animek.info}\n\nSinopsis: ${animek.sinopsis}\n\nLink Download:\n${animek.link_dl}`
             client.sendFileFromUrl(from, animek.thumb, 'kusonime.jpg', res_animek, id)
@@ -442,7 +807,7 @@ module.exports = msgHandler = async (client, message) => {
                 const author = encodeURIComponent(arg[2])
                 const theme = encodeURIComponent(arg[3])
                 await quotemaker(quotes, author, theme).then(amsu => {
-                    client.sendFile(from, amsu, 'quotesmaker.jpg','neh...').catch(() => {
+                    client.sendFile(from, amsu, 'quotesmaker.jpg','bayar 5juta...').catch(() => {
                        client.reply(from, mess.error.Qm, id)
                     })
                 })
@@ -456,19 +821,38 @@ module.exports = msgHandler = async (client, message) => {
                 const inviteLink = await client.getGroupInviteLink(groupId);
                 client.sendLinkWithAutoPreview(from, inviteLink, `\nLink group *${name}*`)
             } else {
-            	client.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
+            	client.reply(from, '???!', id)
             }
             break
+		case '!pokemon':
+            if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
+            q7 = Math.floor(Math.random() * 890) + 1;
+            client.sendFileFromUrl(from, 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/'+q7+'.png','Pokemon.png',)
+            break
+        case '!wame':
+            if (!isGroupMsg)return client.reply(from, `*Neh tod Link Nomor Wa Lu ${pushname}*\n\n*wa.me/${sender.id.replace(/[@c.us]/g, '')}*\n\n*Atau*\n\n*api.whatsapp.com/send?phone=${sender.id.replace(/[@c.us]/g, '')}*`)
+            break	
         case '!bc':
-            if (!isOwner) return client.reply(from, 'Perintah ini hanya untuk Owner bot!', id)
-            let msg = body.slice(4)
-            const chatz = await client.getAllChatIds()
-            for (let ids of chatz) {
-                var cvk = await client.getChatById(ids)
-                if (!cvk.isReadOnly) await client.sendText(ids, `[ Flin Sky BOT Broadcast ]\n\n${msg}`)
-            }
-            client.reply(from, 'Broadcast Success!', id)
-            break
+            if (!isOwner) return client.reply(from, `Perintah ini hanya untuk Owner Flin Sky`, id)
+                bctxt = body.slice(4)
+                txtbc = `*「 FLIN SKY BROADCAST 」*\n\n${bctxt}`
+                const semuagrup = await client.getAllChatIds();
+                if(quotedMsg && quotedMsg.type == 'image'){
+                    const mediaData = await decryptMedia(quotedMsg)
+                    const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
+                    for(let grupnya of semuagrup){
+                        var cekgrup = await client.getChatById(grupnya)
+                        if(!cekgrup.isReadOnly) client.sendImage(grupnya, imageBase64, 'gambar.jpeg', txtbc)
+                    }
+                    client.reply('Broadcast sukses!')
+                }else{
+                    for(let grupnya of semuagrup){
+                        var cekgrup = await client.getChatById(grupnya)
+                        if(!cekgrup.isReadOnly && isMuted(grupnya)) client.sendText(grupnya, txtbc)
+                    }
+                            client.reply('Broadcast Success!')
+                }
+                break
         case '!adminlist':
             if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa di gunakan dalam group!', id)
             let mimin = ''
@@ -491,7 +875,7 @@ module.exports = msgHandler = async (client, message) => {
                 hehe += '╠➥'
                 hehe += ` @${groupMem[i].id.replace(/@c.us/g, '')}\n`
             }
-            hehe += '╚═〘 Flin sky BOT 〙'
+            hehe += '╚═〘 FLIN SKY BOT 〙'
             await client.sendTextWithMentions(from, hehe)
             break
         case '!kickall':
@@ -514,7 +898,7 @@ module.exports = msgHandler = async (client, message) => {
             const allChats = await client.getAllChatIds()
             const allGroups = await client.getAllGroups()
             for (let gclist of allGroups) {
-                await client.sendText(gclist.contact.id, `Maaf bot sedang pembersihan, total chat aktif : ${allChats.length}`)
+                await client.sendText(gclist.contact.id, `ijin out di suuh owner ganteng , total chat aktif : ${allChats.length}`)
                 await client.leaveGroup(gclist.contact.id)
             }
             client.reply(from, 'Succes leave all group!', id)
@@ -544,7 +928,7 @@ module.exports = msgHandler = async (client, message) => {
             if (!isGroupAdmins) return client.reply(from, 'Perintah ini hanya bisa di gunakan oleh admin group', id)
             if (!isBotGroupAdmins) return client.reply(from, 'Perintah ini hanya bisa di gunakan ketika bot menjadi admin', id)
             if (mentionedJidList.length === 0) return client.reply(from, 'Untuk menggunakan Perintah ini, kirim perintah *!kick* @tagmember', id)
-            await client.sendText(from, `Perintah diterima, mengeluarkan:\n${mentionedJidList.join('\n')}`)
+            await client.sendText(from, `bay ajg :v:\n${mentionedJidList.join('\n')}`)
             for (let i = 0; i < mentionedJidList.length; i++) {
                 if (groupAdmins.includes(mentionedJidList[i])) return client.reply(from, mess.error.Ki, id)
                 await client.removeParticipant(groupId, mentionedJidList[i])
@@ -553,7 +937,7 @@ module.exports = msgHandler = async (client, message) => {
         case '!leave':
             if (!isGroupMsg) return client.reply(from, 'Perintah ini hanya bisa di gunakan dalam group', id)
             if (!isGroupAdmins) return client.reply(from, 'Perintah ini hanya bisa di gunakan oleh admin group', id)
-            await client.sendText(from,'Sayonara').then(() => client.leaveGroup(groupId))
+            await client.sendText(from,'bay ajg').then(() => client.leaveGroup(groupId))
             break
         case '!promote':
             if (!isGroupMsg) return client.reply(from, 'Fitur ini hanya bisa di gunakan dalam group', id)
@@ -563,7 +947,7 @@ module.exports = msgHandler = async (client, message) => {
             if (mentionedJidList.length >= 2) return client.reply(from, 'Maaf, perintah ini hanya dapat digunakan kepada 1 user.', id)
             if (groupAdmins.includes(mentionedJidList[0])) return client.reply(from, 'Maaf, user tersebut sudah menjadi admin.', id)
             await client.promoteParticipant(groupId, mentionedJidList[0])
-            await client.sendTextWithMentions(from, `Perintah diterima, menambahkan @${mentionedJidList[0]} sebagai admin.`)
+            await client.sendTextWithMentions(from, `menambahkan @${mentionedJidList[0]} sebagai admin selamat tod :v.`)
             break
         case '!demote':
             if (!isGroupMsg) return client.reply(from, 'Fitur ini hanya bisa di gunakan dalam group', id)
@@ -573,23 +957,23 @@ module.exports = msgHandler = async (client, message) => {
             if (mentionedJidList.length >= 2) return client.reply(from, 'Maaf, perintah ini hanya dapat digunakan kepada 1 orang.', id)
             if (!groupAdmins.includes(mentionedJidList[0])) return client.reply(from, 'Maaf, user tersebut tidak menjadi admin.', id)
             await client.demoteParticipant(groupId, mentionedJidList[0])
-            await client.sendTextWithMentions(from, `Perintah diterima, menghapus jabatan @${mentionedJidList[0]}.`)
+            await client.sendTextWithMentions(from, `menghapus jabatan @${mentionedJidList[0]} sory tod di suruh admin bgst :v.`)
             break
         case '!join':
             //return client.reply(from, 'Jika ingin meng-invite bot ke group anda, silahkan izin ke wa.me/6285892766102', id)
-            if (args.length < 2) return client.reply(from, 'Kirim perintah *!join linkgroup key*\n\nEx:\n!join https://chat.whatsapp.com/blablablablablabla abcde\nuntuk key kamu bisa mendapatkannya hanya dengan donasi 5k', id)
+            if (args.length < 2) return client.reply(from, 'Kirim perintah *!join linkgroup kunci*\n\nEx:\n!join https://chat.whatsapp.com/blablablablablabla abcde\nuntuk kunci kamu bisa mendapatkannya hanya dengan chat owner ketik !owner', id)
             const link = args[1]
             const key = args[2]
             const tGr = await client.getAllGroups()
             const minMem = 100
             const isLink = link.match(/(https:\/\/chat.whatsapp.com)/gi)
-            if (key !== '120203') return client.reply(from, '*key* salah! silahkan chat owner bot unruk mendapatkan key yang valid', id)
+            if (key !== '120203') return client.reply(from, '*kunci* salah! silahkan chat owner bot unruk mendapatkan key yang valid', id)
             const check = await client.inviteInfo(link)
             if (!isLink) return client.reply(from, 'Ini link? 👊🤬', id)
-            if (tGr.length > 15) return client.reply(from, 'Maaf jumlah group sudah maksimal!', id)
+            if (tGr.length > 5) return client.reply(from, 'Maaf jumlah group sudah maksimal!', id)
             if (check.size < minMem) return client.reply(from, 'Member group tidak melebihi 100, bot tidak bisa masuk', id)
             if (check.status === 200) {
-                await client.joinGroupViaLink(link).then(() => client.reply(from, 'succes!'))
+                await client.joinGroupViaLink(link).then(() => client.reply(from, 'Done!'))
             } else {
                 client.reply(from, 'Link group tidak valid!', id)
             }
@@ -598,12 +982,22 @@ module.exports = msgHandler = async (client, message) => {
             if (!isGroupMsg) return client.reply(from, 'Fitur ini hanya bisa di gunakan dalam group', id)
             if (!isGroupAdmins) return client.reply(from, 'Fitur ini hanya bisa di gunakan oleh admin group', id)
             if (!quotedMsg) return client.reply(from, 'Salah!!, kirim perintah *!delete [tagpesanbot]*', id)
-            if (!quotedMsgObj.fromMe) return client.reply(from, 'Salah!!, Bot tidak bisa mengahpus chat user lain!', id)
+            if (!quotedMsgObj.fromMe) return client.reply(from, '🐀򡀀!', id)
             client.deleteMessage(quotedMsgObj.chatId, quotedMsgObj.id, false)
             break
+		case '!setprefix':
+            if (!isOwner) return client.reply(from, 'Maaf, Fitur ini hanya untuk OWNER FLIN SKY', id)
+            if (args.length === 1) return client.reply(from, `*Kirim Perintah !setprefix #`, id)
+            const pf = body.slice(11)
+            setting.prefix = `${pf}`
+            prefix = `${pf}`
+            fs.writeFileSync('./lib/setting.json', JSON.stringify(setting, null, 2))
+            client.reply(from, `Change Prefix To ${pf} SUCCESS!`, id)
+            break		
         case '!getses':
+		    if (!isOwner) return client.reply(from, 'gak usah kepo tod cuma owner yg bisa', id)
             const sesPic = await client.getSnapshot()
-            client.sendFile(from, sesPic, 'session.png', 'Neh...', id)
+            client.sendFile(from, sesPic, 'session.png','nih bos!!', id)
             break
         case '!lirik':
             if (args.length == 1) return client.reply(from, 'Kirim perintah *!lirik [optional]*, contoh *!lirik aku bukan boneka*', id)
@@ -632,7 +1026,7 @@ module.exports = msgHandler = async (client, message) => {
         case '!jadwalshalat':
             if (args.length === 1) return client.reply(from, '[❗] Kirim perintah *!jadwalShalat [daerah]*\ncontoh : *!jadwalShalat Tangerang*\nUntuk list daerah kirim perintah *!listDaerah*')
             const daerah = body.slice(14)
-            const jadwalShalat = await get.get(`https://mhankbarbars.herokuapp.com/api/jadwalshalat?daerah=${daerah}&apiKey=${apiKey}`).json()
+            const jadwalShalat = await get.get(`https://mhankbarbar.herokuapp.com/api/jadwalshalat?daerah=${daerah}&apiKey=${apiKey}`).json()
             if (jadwalShalat.error) return client.reply(from, jadwalShalat.error, id)
             const { Imsyak, Subuh, Dhuha, Dzuhur, Ashar, Maghrib, Isya } = await jadwalShalat
             arrbulan = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
@@ -657,10 +1051,10 @@ module.exports = msgHandler = async (client, message) => {
             break
         case '!loli':
             const loli = await get.get('https://mhankbarbars.herokuapp.com/api/randomloli').json()
-            client.sendFileFromUrl(from, loli.result, 'loli.jpeg', 'Lolinya om', id)
+            client.sendFileFromUrl(from, loli.result, 'loli.jpeg', '*L O L I*', id)
             break
         case '!waifu':
-            const waifu = await get.get(`https://mhankbarbars.herokuapp.com/api/waifu?apiKey=${apiKey}`).json()
+            const waifu = await get.get(`https://mhankbarbar.herokuapp.com/api/waifu?apiKey=${apiKey}`).json()
             client.sendFileFromUrl(from, waifu.image, 'Waifu.jpg', `➸ Name : ${waifu.name}\n➸ Description : ${waifu.desc}\n\n➸ Source : ${waifu.source}`, id)
             break
         case '!husbu':
@@ -711,7 +1105,7 @@ module.exports = msgHandler = async (client, message) => {
             }
             break
         case '!randomnekonime':
-            const nekonime = await get.get('https://mhankbarbars.herokuapp.com/api/nekonime').json()
+            const nekonime = await get.get('https://mhankbarbar.herokuapp.com/api/nekonime').json()
             if (nekonime.result.endsWith('.png')) {
                 var ext = '.png'
             } else {
