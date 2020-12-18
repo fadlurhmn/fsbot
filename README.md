@@ -17,7 +17,7 @@
 ## Clone this project
 
 ```bash
-> git clone https://github.com/MhankBarBar/whatsapp-bot
+> git clone https://github.com/FlinSky/fsbit
 ```
 
 ## Install the dependencies:
@@ -105,7 +105,7 @@ Fix Stuck on linux, install google chrome stable:
 ```
 ## Special Thanks to
 * [`open-wa/wa-automate-nodejs`](https://github.com/open-wa/wa-automate-nodejs)
-* [`ibnusyawall/imageToSticker`](https://github.com/YogaSakti/imageToSticker)
+* [`ibnusyawall/aex-bot`](https://github.com/ibnusyawall/aex-bot)
 * [`SomnathDas/Whatsapp-Botto-Re`](https://github.com/SomnathDas/Whatsapp-Botto-Re)
 
 ### Donate
