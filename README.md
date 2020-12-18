@@ -17,7 +17,7 @@
 ## Clone this project
 
 ```bash
-> git clone https://github.com/FlinSky/fsbit
+> git clone https://github.com/FlinSky/fsbot
 ```
 
 ## Install the dependencies:
