@@ -2,10 +2,10 @@
 <img src="https://raw.githubusercontent.com/FlinSky/fsbot/master/media/img/FlinSky.png" width="128" height="128"/>
 </p>
 <p align="center">
-<a href="#"><img title="fsbot" src="https://img.shields.io/badge/Whatsapp Bot-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge"></a>
+<a href="#"><img title="fsbot" src="https://img.shields.io/badge/Flin Sky Bot-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge"></a>
 </p>
 <p align="center">
-<a href="https://github.com/FlinSky"><img title="Author" src="https://img.shields.io/badge/Author-Rey sekha-red.svg?style=for-the-badge&logo=github"></a>
+<a href="https://github.com/FlinSky"><img title="Author" src="https://img.shields.io/badge/Author-Rey sekha-black.svg?style=for-the-badge&logo=github"></a>
 </p>
 <p align="center">
 <a href="https://github.com/FlinSky/followers"><img title="Followers" src="https://img.shields.io/github/followers/FlinSky?color=blue&style=flat-square"></a>
@@ -90,7 +90,9 @@ you've just cloned!!
 
 | Owner Bot Only  |              Feature                |
 | :------------: | :---------------------------------------------: |
-|       ✅        |   leave all group                   |
+|       ✅        |   leave all group 
+|       ✅        |   setpp
+|       ✅        |   setname
 |       ✅        |   clear all message                 |
 |       ✅        |   Broadcast                      |
 
@@ -105,7 +107,9 @@ Fix Stuck on linux, install google chrome stable:
 > sudo apt install ./google-chrome-stable_current_amd64.deb
 ```
 ## Special Thanks to
-* [`open-wa/wa-automate-nodejs`](https://github.com/open-wa/wa-automate-nodejs)
+* [`Arugaz']
+* ['TobyG74']
+* ['Lucya Bot']
 * [`ibnusyawall/aex-bot`](https://github.com/ibnusyawall/aex-bot)
 
 ### Donate
