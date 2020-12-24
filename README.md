@@ -99,6 +99,7 @@ you've just cloned!!
 
 
 ## Special Thanks to
+* ['MhankBarBar'](https://github.com/MhankBarBar/whatsapp-bot)
 * [`Arugaz'](https://github.com/ArugaZ/whatsapp-bot)
 * ['TobyG74'](https://github.com/TobyG74/ElainaBOT)
 * ['Lucya Bot'](https://github.com/bdrsmsdn/lucya-bot)
