@@ -2,7 +2,7 @@
 <img src="https://raw.githubusercontent.com/FlinSky/fsbot/master/media/img/FlinSky.png" width="128" height="128"/>
 </p>
 <p align="center">
-<a href="#"><img title="fsbot" src="https://img.shields.io/badge/Flin Sky-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge"></a>
+<a href="#"><img title="FlinSky" src="https://img.shields.io/badge/Flin Sky-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge"></a>
 </p>
 <p align="center">
 <a href="https://github.com/FlinSky"><img title="Author" src="https://img.shields.io/badge/Author-Rey sekha-black.svg?style=for-the-badge&logo=github"></a>
@@ -18,6 +18,7 @@
 
 ```bash
 > git clone https://github.com/FlinSky/fsbot
+> cd fsbot
 ```
 
 ## Install the dependencies:
@@ -33,7 +34,7 @@ you've just cloned!!
 > npm start
 ```
 
-## Features
+## fitur
 
 | Sticker Creator |                Feature           |
 | :-----------: | :--------------------------------: |
@@ -97,19 +98,10 @@ you've just cloned!!
 |       ✅        |   Broadcast                      |
 
 
-### Troubleshooting
-Make sure all the necessary dependencies are installed.
-https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md
-
-Fix Stuck on linux, install google chrome stable:
-```bash
-> wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-> sudo apt install ./google-chrome-stable_current_amd64.deb
-```
 ## Special Thanks to
-* [`Arugaz']
-* ['TobyG74']
-* ['Lucya Bot']
+* [`Arugaz'](https://github.com/ArugaZ/whatsapp-bot)
+* ['TobyG74'](https://github.com/TobyG74/ElainaBOT)
+* ['Lucya Bot'](https://github.com/bdrsmsdn/lucya-bot)
 * [`ibnusyawall/aex-bot`](https://github.com/ibnusyawall/aex-bot)
 
 ### Donate
