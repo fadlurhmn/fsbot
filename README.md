@@ -10,7 +10,7 @@
 <p align="center">
 <a href="https://github.com/FlinSky/followers"><img title="Followers" src="https://img.shields.io/github/followers/FlinSky?color=blue&style=flat-square"></a>
 <a href="https://github.com/FlinSky/fsbot/stargazers/"><img title="Stars" src="https://img.shields.io/github/stars/FlinSky/fsbot?color=red&style=flat-square"></a>
-<a href="https://github.com/FlinSky/fsbot/network/members"><img title="Forks" src="https://img.shields.io/github/forks/FlinSky?color=red&style=flat-square"></a>
+<a href="https://github.com/FlinSky/fsbot/network/members"><img"></a>
 <a href="https://github.com/FlinSky/fsbot/watchers"><img title="Watching" src="https://img.shields.io/github/watchers/FlinSky/fsbot?label=Watchers&color=blue&style=flat-square"></a>
 </p>
 
