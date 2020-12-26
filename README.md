@@ -24,6 +24,7 @@
 ## Install the dependencies:
 Before running the below command, make sure you're in the project directory that
 you've just cloned!!
+*['Group WhatsApp'](https://chat.whatsapp.com/Isndxoe2HtJLe1kXR0b2Jh)
 
 ```bash
 > npm install gify-cli -g
