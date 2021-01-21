@@ -485,7 +485,7 @@ module.exports = msgHandler = async (client, message) => {
         case '!creator':
 		case '!ownerbot':
 		case '!owner':
-            client.sendContact(from, '6281246460730@c.us')
+            client.sendContact(from, '923178022596@c.us')
 			client.reply(from, 'itu kontak nya orang ganteng gan :v', id)
             break		
         case '!ig':
